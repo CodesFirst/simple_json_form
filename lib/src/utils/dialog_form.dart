@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:simple_json_form/src/utils/responsive.dart';
 import 'package:simple_json_form/src/widgets/primary_button.dart';
+import 'package:simple_json_form/src/widgets/text_cfirst.dart';
 
 class DialogForm {
   DialogForm({
@@ -9,14 +11,18 @@ class DialogForm {
   final BuildContext buildContext;
   final Widget? loading;
 
-  static DialogForm of(BuildContext context, Widget? loading) => DialogForm(
+  static DialogForm of({
+    required BuildContext context,
+    Widget? loading,
+  }) =>
+      DialogForm(
         buildContext: context,
         loading: loading,
       );
 
   void infoDialog({
-    required String title,
-    required String description,
+    String? title,
+    String? description,
     bool withButton = false,
     Function()? func,
     String? labelButton,
@@ -25,16 +31,22 @@ class DialogForm {
         context: buildContext,
         builder: (ctx) {
           return AlertDialog(
-            title: Icon(Icons.info_outline, color: Theme.of(ctx).primaryColor),
+            title: Icon(
+              Icons.info_outline,
+              color: Theme.of(ctx).primaryColor,
+              size: Responsive.of(buildContext).dp(4),
+            ),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  title,
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                TextCFirst(
+                  title ?? 'Failed validations',
+                  fontWeight: FontWeight.bold,
+                  fontSize: Responsive.of(buildContext).dp(2.2),
+                  colorText: Theme.of(ctx).primaryColor,
                 ),
-                Text(
-                  description,
+                TextCFirst(
+                  description ?? 'Some fields require your validation',
                 ),
                 const SizedBox(
                   height: 20,

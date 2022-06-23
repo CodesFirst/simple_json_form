@@ -1,166 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:simple_json_form/src/key/simple_json_form_key.dart';
 import 'package:simple_json_form/src/model/json_schema.dart';
+import 'package:simple_json_form/src/utils/dialog_form.dart';
 import 'package:simple_json_form/src/widgets/form_button.dart';
 import 'package:simple_json_form/src/widgets/simple_json_form_field.dart';
-
-// class SimpleJsonForm extends StatelessWidget {
-//   const SimpleJsonForm({
-//     Key? key,
-//     required this.jsonSchema,
-//     required this.index,
-//     required this.imageUrl,
-//     required this.onSubmit,
-//     this.crossAxisAlignment = CrossAxisAlignment.start,
-//     this.padding,
-//     this.submitButtonText,
-//     this.nextButtonText,
-//     this.previousButtonText,
-//     this.title,
-//     this.description,
-//     this.descriptionStyle,
-//     this.titleStyle,
-//   }) : super(key: key);
-
-//   //JSON Schema to use to generate the form.
-//   final JsonSchema jsonSchema;
-
-//   //crossAxisAlignment to use general form
-//   final CrossAxisAlignment crossAxisAlignment;
-
-//   //padding to use general form
-//   final EdgeInsetsGeometry? padding;
-
-//   //Title general to use the form
-//   final String? title;
-
-//   //title style to use title the form
-//   final TextStyle? titleStyle;
-
-//   //Description general to use the form
-//   final String? description;
-
-//   //Description style to use description form
-//   final TextStyle? descriptionStyle;
-
-//   //isJustForm to use for show totally form or one for one
-//   //final bool isJustForm;
-
-//   //imageUrl to use for send services
-//   final String imageUrl;
-
-//   //To use for text the submit button
-//   final String? submitButtonText;
-
-//   //To use for text the previous button
-//   final String? previousButtonText;
-
-//   //To use for text the next button
-//   final String? nextButtonText;
-
-//   //index to use for initial form
-//   final int index;
-
-//   //function to use for get detailt of form
-//   final Function onSubmit;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final indexForm = context.watch<SimpleJsonFromViewModel>().indexForm;
-//     return ChangeNotifierProvider(
-//       create: (context) => SimpleJsonFromViewModel()..init(index),
-//       child: SingleChildScrollView(
-//         child: Container(
-//           padding: padding,
-//           child: Column(
-//             crossAxisAlignment: crossAxisAlignment,
-//             children: [
-//               if (title != null)
-//                 Text(
-//                   title!,
-//                   style: titleStyle,
-//                   textAlign: TextAlign.center,
-//                 ),
-//               if (description != null)
-//                 Text(
-//                   description!,
-//                   style: descriptionStyle,
-//                 ),
-
-//               //show form if exist
-
-//               ...jsonSchema.data[indexForm].questions!.map(
-//                 (entry) => SimpleJsonFormField(
-//                   question: entry,
-//                   imageUrl: imageUrl,
-//                   descriptionTextDecoration: const TextStyle(color: Colors.grey),
-//                 ),
-//               ),
-//               const SizedBox(height: 10),
-
-//               jsonSchema.data.length == (indexForm + 1)
-//                   ? Center(
-//                       child: PrimaryButton(
-//                           onPressed: () {
-//                             onSubmit(getCompleteData(context, indexForm));
-//                           },
-//                           text: submitButtonText ?? "Submit"),
-//                     )
-//                   : Center(
-//                       child: PrimaryButton(
-//                           onPressed: () {
-//                             final next = getNextData(context, indexForm);
-//                             if (next) {
-//                               context
-//                                   .read<SimpleJsonFromViewModel>()
-//                                   .changeIndexForm(indexForm + 1);
-//                             }
-//                           },
-//                           text: nextButtonText ?? "Next"),
-//                     )
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-
-//   getCompleteData(BuildContext context, int index) {
-//     if (jsonSchema.data.isEmpty) return jsonSchema;
-//     int f = 0;
-//     List<Questions>? questions = jsonSchema.data[index].questions;
-//     for (Questions item in questions!) {
-//       if (item.answer == null && item.isMandatory == true) {
-//         ScaffoldMessenger.of(context).showSnackBar(
-//           SnackBar(
-//             content: Text("${item.title} is mandatory"),
-//           ),
-//         );
-//         f = 1;
-//         break;
-//       }
-//     }
-//     return f == 0 ? jsonSchema : null;
-//   }
-
-//   bool getNextData(BuildContext context, int index) {
-//     if (jsonSchema.data.isEmpty) return false;
-//     int f = 0;
-//     List<Questions>? questions = jsonSchema.data[index].questions;
-//     for (Questions item in questions!) {
-//       if (item.answer == null && item.isMandatory == true) {
-//         ScaffoldMessenger.of(context).showSnackBar(
-//           SnackBar(
-//             content: Text("${item.title} es mandatorio"),
-//           ),
-//         );
-//         f = 1;
-//         break;
-//       }
-//     }
-//     return f == 0 ? true : false;
-//   }
-// }
 
 class SimpleJsonForm extends StatefulWidget {
   //JSON Schema to use to generate the form.
@@ -208,6 +51,12 @@ class SimpleJsonForm extends StatefulWidget {
   //widget to use loading form
   final Widget? loading;
 
+  //text for use dialog info
+  final String? validationTitle;
+
+  //text for use dialog info
+  final String? validationDescription;
+
   const SimpleJsonForm({
     Key? key,
     required this.jsonSchema,
@@ -224,6 +73,8 @@ class SimpleJsonForm extends StatefulWidget {
     this.descriptionStyle,
     this.titleStyle,
     this.loading,
+    this.validationDescription,
+    this.validationTitle,
   }) : super(key: key);
 
   @override
@@ -314,7 +165,7 @@ class _SimpleJsonFormState extends State<SimpleJsonForm> {
                     previousText: widget.previousButtonText ?? 'Previous',
                     submitText: widget.submitButtonText ?? 'Submit',
                     onNext: () {
-                      final next = getNextData(_indexForm);
+                      final next = _nextForm(_indexForm);
                       if (next) {
                         setState(() {
                           _indexForm = _indexForm + 1;
@@ -322,14 +173,14 @@ class _SimpleJsonFormState extends State<SimpleJsonForm> {
                       }
                     },
                     onPrevious: () {
-                      final next = getPreviousData(_indexForm);
-                      if (next) {
-                        setState(() {
-                          _indexForm = _indexForm - 1;
-                        });
-                      }
+                      //final next = getPreviousData(_indexForm);
+                      //if (next) {
+                      setState(() {
+                        _indexForm = _indexForm - 1;
+                      });
+                      //}
                     },
-                    onSubmit: () => widget.onSubmit(getCompleteData(_indexForm)),
+                    onSubmit: () => widget.onSubmit(_completeForm(_indexForm)),
                   )
                 : SizedBox.fromSize(),
             const SizedBox(height: 20),
@@ -339,67 +190,29 @@ class _SimpleJsonFormState extends State<SimpleJsonForm> {
     );
   }
 
-  getCompleteData(int index) {
+  _completeForm(int index) {
     if (widget.jsonSchema.form.isEmpty) return widget.jsonSchema;
-    //int f = 0;
-    //List<Properties>? questions = widget.jsonSchema.form[index].properties;
     final formKey = SimpleJsonFormKey.keyMapping[widget.jsonSchema.form[_indexForm].key];
     if (formKey?.currentState?.validate() ?? false) return widget.jsonSchema;
     return null;
-
-    // for (Properties item in questions!) {
-    //   if (item.answer == null && item.isMandatory == true) {
-    //     ScaffoldMessenger.of(context).showSnackBar(
-    //       SnackBar(
-    //         content: Text("${item.title} is mandatory"),
-    //       ),
-    //     );
-    //     f = 1;
-    //     break;
-    //   }
-    // }
-    // return f == 0 ? widget.jsonSchema : null;
   }
 
-  bool getNextData(int index) {
+  bool _nextForm(int index) {
     if (widget.jsonSchema.form.isEmpty) return false;
     final formKey = SimpleJsonFormKey.keyMapping[widget.jsonSchema.form[_indexForm].key];
     if (formKey?.currentState?.validate() ?? false) return true;
+    DialogForm.of(context: context).infoDialog(
+      title: widget.validationTitle,
+      description: widget.validationDescription,
+    );
     return false;
-    // final _formKey = SimpleJsonFormKey.keyMapping[widget.jsonSchema.form[_indexForm].key];
-    // final validate = _formKey?.currentState!.validate();
-    // int f = 0;
-    // List<Properties>? questions = widget.jsonSchema.form[index].properties;
-    // for (Properties item in questions!) {
-    //   if (item.answer == null && item.isMandatory == true) {
-    //     ScaffoldMessenger.of(context).showSnackBar(
-    //       SnackBar(
-    //         content: Text("${item.title} es mandatorio"),
-    //       ),
-    //     );
-    //     f = 1;
-    //     break;
-    //   }
-    // }
-    // return f == 0 ? true : false;
   }
 
   bool getPreviousData(int index) {
     if (widget.jsonSchema.form.isEmpty) return false;
-    int f = 0;
-    List<Properties>? questions = widget.jsonSchema.form[index].properties;
-    for (Properties item in questions!) {
-      if (item.answer == null && item.isMandatory == true) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("${item.title} es mandatorio"),
-          ),
-        );
-        f = 1;
-        break;
-      }
-    }
-    return f == 0 ? true : false;
+    final formKey = SimpleJsonFormKey.keyMapping[widget.jsonSchema.form[_indexForm].key];
+    if (formKey?.currentState?.validate() ?? false) return true;
+    return false;
   }
 }
 

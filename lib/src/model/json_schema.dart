@@ -116,7 +116,7 @@ class Properties {
   });
 
   factory Properties.fromJson(Map<String, dynamic> json) => Properties(
-        fields: json['fields'].cast<String>(),
+        fields: json.containsKey('fields') ? json['fields'].cast<String>() : null,
         key: json['key'],
         title: json['title'],
         description: json['description'],

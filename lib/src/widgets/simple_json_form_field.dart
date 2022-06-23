@@ -37,10 +37,11 @@ class _SimpleJsonFormFieldState extends State<SimpleJsonFormField> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    child: Text(widget.properties.title ?? ''),
-                  ),
+                  if (widget.properties.title != null)
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      child: Text(widget.properties.title!),
+                    ),
                   if (widget.properties.description != null)
                     Text(
                       widget.properties.description!,
