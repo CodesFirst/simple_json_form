@@ -32,7 +32,8 @@ class CustomDropdownWidget extends StatelessWidget {
               width: width,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: DropdownButton(
+                child: DropdownButtonFormField(
+                  iconEnabledColor: Constants.lightBlueColor,
                   icon: const RotatedBox(
                     quarterTurns: 3,
                     child: Icon(
@@ -40,6 +41,13 @@ class CustomDropdownWidget extends StatelessWidget {
                       size: 20,
                       color: Colors.grey,
                     ),
+                  ),
+                  decoration: InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Constants.lightBlueColor, width: 0.0),
+                    ),
+                    border:
+                        OutlineInputBorder(borderSide: BorderSide(color: Constants.lightBlueColor)),
                   ),
                   value: dropVal,
                   hint: Row(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:simple_json_form/src/key/simple_json_form_key.dart';
 import 'package:simple_json_form/src/model/json_schema.dart';
 import 'package:simple_json_form/src/widgets/form_button.dart';
 import 'package:simple_json_form/src/widgets/simple_json_form_field.dart';
@@ -204,6 +205,9 @@ class SimpleJsonForm extends StatefulWidget {
   //function to use for get detailt of form
   final Function onSubmit;
 
+  //widget to use loading form
+  final Widget? loading;
+
   const SimpleJsonForm({
     Key? key,
     required this.jsonSchema,
@@ -219,6 +223,7 @@ class SimpleJsonForm extends StatefulWidget {
     this.description,
     this.descriptionStyle,
     this.titleStyle,
+    this.loading,
   }) : super(key: key);
 
   @override
@@ -255,39 +260,78 @@ class _SimpleJsonFormState extends State<SimpleJsonForm> {
 
             //show form if exist
 
-            ...widget.jsonSchema.data[_indexForm].questions!.map(
-              (entry) => SimpleJsonFormField(
-                question: entry,
-                imageUrl: widget.imageUrl,
-                descriptionTextDecoration: const TextStyle(color: Colors.grey),
-              ),
+            ...List.generate(
+              widget.jsonSchema.form.length,
+              (i) {
+                return Visibility(
+                  visible: i == _indexForm,
+                  child: Form(
+                    key: SimpleJsonFormKey.keyMapping[widget.jsonSchema.form[i].key],
+                    child: Column(
+                      children: widget.jsonSchema.form[i].properties!
+                          .map(
+                            (entry) => SimpleJsonFormField(
+                              properties: entry,
+                              imageUrl: widget.imageUrl,
+                              descriptionTextDecoration: const TextStyle(color: Colors.grey),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                );
+              },
             ),
-            const SizedBox(height: 10),
 
-            FormButton(
-              lengthForm: widget.jsonSchema.data.length,
-              indexForm: _indexForm,
-              nextText: widget.nextButtonText ?? 'Next',
-              previousText: widget.previousButtonText ?? 'Previous',
-              submitText: widget.submitButtonText ?? 'Submit',
-              onNext: () {
-                final next = getNextData(_indexForm);
-                if (next) {
-                  setState(() {
-                    _indexForm = _indexForm + 1;
-                  });
-                }
-              },
-              onPrevious: () {
-                final next = getPreviousData(_indexForm);
-                if (next) {
-                  setState(() {
-                    _indexForm = _indexForm - 1;
-                  });
-                }
-              },
-              onSubmit: () => widget.onSubmit(getCompleteData(_indexForm)),
-            ),
+            // Form(
+            //   key: SimpleJsonFormKey.keyMapping[widget.jsonSchema.data[_indexForm].key],
+            //   child: Column(
+            //     children: widget.jsonSchema.data[_indexForm].questions!
+            //         .map(
+            //           (entry) => SimpleJsonFormField(
+            //             question: entry,
+            //             imageUrl: widget.imageUrl,
+            //             descriptionTextDecoration: const TextStyle(color: Colors.grey),
+            //           ),
+            //         )
+            //         .toList(),
+            //   ),
+            // ),
+
+            // ...widget.jsonSchema.data[_indexForm].questions!.map(
+            //   (entry) => SimpleJsonFormField(
+            //     question: entry,
+            //     imageUrl: widget.imageUrl,
+            //     descriptionTextDecoration: const TextStyle(color: Colors.grey),
+            //   ),
+            // ),
+            const SizedBox(height: 10),
+            widget.jsonSchema.form.isNotEmpty
+                ? FormButton(
+                    lengthForm: widget.jsonSchema.form.length,
+                    indexForm: _indexForm,
+                    nextText: widget.nextButtonText ?? 'Next',
+                    previousText: widget.previousButtonText ?? 'Previous',
+                    submitText: widget.submitButtonText ?? 'Submit',
+                    onNext: () {
+                      final next = getNextData(_indexForm);
+                      if (next) {
+                        setState(() {
+                          _indexForm = _indexForm + 1;
+                        });
+                      }
+                    },
+                    onPrevious: () {
+                      final next = getPreviousData(_indexForm);
+                      if (next) {
+                        setState(() {
+                          _indexForm = _indexForm - 1;
+                        });
+                      }
+                    },
+                    onSubmit: () => widget.onSubmit(getCompleteData(_indexForm)),
+                  )
+                : SizedBox.fromSize(),
             const SizedBox(height: 20),
           ],
         ),
@@ -296,28 +340,55 @@ class _SimpleJsonFormState extends State<SimpleJsonForm> {
   }
 
   getCompleteData(int index) {
-    if (widget.jsonSchema.data.isEmpty) return widget.jsonSchema;
-    int f = 0;
-    List<Questions>? questions = widget.jsonSchema.data[index].questions;
-    for (Questions item in questions!) {
-      if (item.answer == null && item.isMandatory == true) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("${item.title} is mandatory"),
-          ),
-        );
-        f = 1;
-        break;
-      }
-    }
-    return f == 0 ? widget.jsonSchema : null;
+    if (widget.jsonSchema.form.isEmpty) return widget.jsonSchema;
+    //int f = 0;
+    //List<Properties>? questions = widget.jsonSchema.form[index].properties;
+    final formKey = SimpleJsonFormKey.keyMapping[widget.jsonSchema.form[_indexForm].key];
+    if (formKey?.currentState?.validate() ?? false) return widget.jsonSchema;
+    return null;
+
+    // for (Properties item in questions!) {
+    //   if (item.answer == null && item.isMandatory == true) {
+    //     ScaffoldMessenger.of(context).showSnackBar(
+    //       SnackBar(
+    //         content: Text("${item.title} is mandatory"),
+    //       ),
+    //     );
+    //     f = 1;
+    //     break;
+    //   }
+    // }
+    // return f == 0 ? widget.jsonSchema : null;
   }
 
   bool getNextData(int index) {
-    if (widget.jsonSchema.data.isEmpty) return false;
+    if (widget.jsonSchema.form.isEmpty) return false;
+    final formKey = SimpleJsonFormKey.keyMapping[widget.jsonSchema.form[_indexForm].key];
+    if (formKey?.currentState?.validate() ?? false) return true;
+    return false;
+    // final _formKey = SimpleJsonFormKey.keyMapping[widget.jsonSchema.form[_indexForm].key];
+    // final validate = _formKey?.currentState!.validate();
+    // int f = 0;
+    // List<Properties>? questions = widget.jsonSchema.form[index].properties;
+    // for (Properties item in questions!) {
+    //   if (item.answer == null && item.isMandatory == true) {
+    //     ScaffoldMessenger.of(context).showSnackBar(
+    //       SnackBar(
+    //         content: Text("${item.title} es mandatorio"),
+    //       ),
+    //     );
+    //     f = 1;
+    //     break;
+    //   }
+    // }
+    // return f == 0 ? true : false;
+  }
+
+  bool getPreviousData(int index) {
+    if (widget.jsonSchema.form.isEmpty) return false;
     int f = 0;
-    List<Questions>? questions = widget.jsonSchema.data[index].questions;
-    for (Questions item in questions!) {
+    List<Properties>? questions = widget.jsonSchema.form[index].properties;
+    for (Properties item in questions!) {
       if (item.answer == null && item.isMandatory == true) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -330,22 +401,41 @@ class _SimpleJsonFormState extends State<SimpleJsonForm> {
     }
     return f == 0 ? true : false;
   }
+}
 
-  bool getPreviousData(int index) {
-    if (widget.jsonSchema.data.isEmpty) return false;
-    int f = 0;
-    List<Questions>? questions = widget.jsonSchema.data[index].questions;
-    for (Questions item in questions!) {
-      if (item.answer == null && item.isMandatory == true) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text("${item.title} es mandatorio"),
-          ),
-        );
-        f = 1;
-        break;
-      }
-    }
-    return f == 0 ? true : false;
+class _FormBuilderWidget extends StatelessWidget {
+  const _FormBuilderWidget({
+    Key? key,
+    required this.jsonSchema,
+    required this.imageUrl,
+  }) : super(key: key);
+
+  final JsonSchema jsonSchema;
+  final String imageUrl;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemCount: jsonSchema.form.length,
+        itemBuilder: (context, index) {
+          return Form(
+            key: SimpleJsonFormKey.keyMapping[jsonSchema.form[index].key],
+            child: Column(
+              children: jsonSchema.form[index].properties!
+                  .map(
+                    (entry) => SimpleJsonFormField(
+                      properties: entry,
+                      imageUrl: imageUrl,
+                      descriptionTextDecoration: const TextStyle(color: Colors.grey),
+                    ),
+                  )
+                  .toList(),
+            ),
+          );
+        },
+      ),
+    );
   }
 }

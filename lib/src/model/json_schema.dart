@@ -1,3 +1,5 @@
+import 'package:simple_json_form/src/controller/simple_json_form_controller.dart';
+import 'package:simple_json_form/src/key/simple_json_form_key.dart';
 import 'package:simple_json_form/src/model/validation_schema.dart';
 
 /// An instance has one of six primitive types, and a range of possible values depending on the type:
@@ -38,62 +40,57 @@ enum JsonSchemaType {
 }
 
 class JsonSchema {
-  final List<Data> data;
+  final List<FormBuilder> form;
 
-  JsonSchema({required this.data});
+  JsonSchema({required this.form});
 
-  factory JsonSchema.fromJson(Map<String, dynamic> json) => JsonSchema(
-      data: json['data'] == null
+  factory JsonSchema.fromJson(Map<String, dynamic> json) {
+    final jsonSchema = JsonSchema(
+      form: json['form'] == null
           ? []
-          : List<Data>.from(json['data'].map(
-              (e) => Data.fromJson(e),
-            )));
+          : List<FormBuilder>.from(
+              json['form'].map(
+                (e) => FormBuilder.fromJson(e),
+              ),
+            ),
+    );
+    SimpleJsonFormKey(jsonSchema: jsonSchema);
+    SimpleJsonFormController(jsonSchema: jsonSchema);
+    return jsonSchema;
+  }
 
-  Map<String, dynamic> toJson() => {'data': data.map((v) => v.toJson()).toList()};
+  Map<String, dynamic> toJson() => {'form': form.map((v) => v.toJson()).toList()};
 }
 
-class Data {
-  final List<Questions>? questions;
+class FormBuilder {
+  final List<Properties>? properties;
+  final String key;
   //List<Questions>? properties;
 
-  Data({
-    this.questions,
+  FormBuilder({
+    required this.key,
+    this.properties,
   });
 
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
-        questions: json['questions'] != null
-            ? List<Questions>.from(json['questions'].map((e) => Questions.fromJson(e)))
+  factory FormBuilder.fromJson(Map<String, dynamic> json) => FormBuilder(
+        key: json['key'],
+        properties: json['properties'] != null
+            ? List<Properties>.from(json['properties'].map((e) => Properties.fromJson(e)))
             : null,
       );
 
   Map<String, dynamic> toJson() => {
-        'questions': questions == null ? [] : questions!.map((v) => v.toJson()).toList(),
+        'properties': properties == null ? [] : properties!.map((v) => v.toJson()).toList(),
       };
 }
 
-class RepeatEnds {
-  String? value;
-
-  RepeatEnds({this.value});
-
-  RepeatEnds.fromJson(Map<String, dynamic> json) {
-    value = json['value'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    data['value'] = value;
-    return data;
-  }
-}
-
-class Questions {
-  final String? sId;
+class Properties {
+  final String key;
   final String? title;
   final String? description;
   final List<String>? fields;
   final int? maxline;
-  final bool? isMandatory;
+  final bool isMandatory;
   final JsonSchemaType type;
   final String? remarkLabel;
   final String? remarkTitle;
@@ -102,44 +99,45 @@ class Questions {
   dynamic answer;
   String? remarkData;
 
-  Questions({
+  Properties({
+    required this.key,
+    required this.type,
     this.fields,
-    this.sId,
     this.title,
     this.description,
     this.validations,
-    required this.type,
     this.maxline,
-    this.isMandatory,
     this.remarkLabel,
     this.remarkTitle,
     this.remarkData,
     this.answer,
+    this.isMandatory = false,
     this.remark = false,
   });
 
-  factory Questions.fromJson(Map<String, dynamic> json) => Questions(
+  factory Properties.fromJson(Map<String, dynamic> json) => Properties(
         fields: json['fields'].cast<String>(),
-        sId: json['_id'],
+        key: json['key'],
         title: json['title'],
         description: json['description'],
         remark: json['remark'],
         type: stringToJsonSchemaType[json['type']] ?? JsonSchemaType.none,
         maxline: json["maxline"] ?? 1,
-        isMandatory: json['is_mandatory'],
+        isMandatory: json['is_mandatory'] ?? false,
         remarkLabel: json['remark_label'],
         remarkTitle: json['remark_title'],
         answer: json['type'] == "checkbox"
             ? List.generate(json['fields'].cast<String>().length, (index) => false)
             : null,
-        // validations:
-        //     json.containsKey('validations') ? ValidationSchema.fromJSON(json['validations']) : null,
+        validations: json['validations'] is Map<String, dynamic>
+            ? ValidationSchema.fromJSON(json['validations'])
+            : null,
       );
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = {};
     data['fields'] = type == JsonSchemaType.text ? "300" : fields.toString();
-    data['_id'] = sId;
+    data['key'] = key;
     data['title'] = title;
     data['description'] = description;
     data['remark'] = remark;
@@ -153,8 +151,8 @@ class Questions {
     return data;
   }
 
-  Questions copyWith({
-    String? sId,
+  Properties copyWith({
+    String? key,
     String? title,
     String? description,
     List<String>? fields,
@@ -167,7 +165,7 @@ class Questions {
     dynamic answer,
     bool? remark,
   }) =>
-      Questions(
+      Properties(
         answer: answer ?? this.answer,
         description: description ?? this.description,
         fields: fields ?? this.fields,
@@ -177,7 +175,7 @@ class Questions {
         remarkData: remarkData ?? this.remarkData,
         remarkLabel: remarkLabel ?? this.remarkLabel,
         remarkTitle: remarkTitle ?? this.remarkTitle,
-        sId: sId ?? this.sId,
+        key: key ?? this.key,
         title: title ?? this.title,
         type: type ?? this.type,
       );

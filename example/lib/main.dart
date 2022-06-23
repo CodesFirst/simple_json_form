@@ -207,35 +207,34 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final sampleData = JsonSchema.fromJson({
-      "data": [
+      "form": [
         {
-          "questions": [
+          "key": "informations",
+          "properties": [
             {
-              "question_id": "60e0a77c10926d0f006834a5",
               "fields": [],
-              "_id": "60dc6a3dc9fe14577c30d276",
+              "key": "buque",
               "title": "Buque",
               "description": "",
               "type": "text",
               "maxline": 1,
               "remark": false,
-              "is_mandatory": true
+              "is_mandatory": true,
+              "validations": {"length": {}}
             },
             {
-              "question_id": "60e0a77c10926d0f006834a5",
               "fields": [],
-              "_id": "60dc6a3dc9fe14577c30d276",
+              "key": "date",
               "title": "Fecha",
               "description": "",
               "type": "date",
               "maxline": 1,
               "remark": false,
-              "is_mandatory": false
+              "is_mandatory": true
             },
             {
-              "question_id": "60e0a77c10926d0f006834a5",
               "fields": [],
-              "_id": "60dc6a3dc9fe14577c30d276",
+              "key": "departament",
               "title": "Departamento",
               "description": "",
               "type": "text",
@@ -244,9 +243,8 @@ class MyApp extends StatelessWidget {
               "is_mandatory": false
             },
             {
-              "question_id": "60e0a77c10926d0f006834a5",
               "fields": [],
-              "_id": "60dc6a3dc9fe14577c30d276",
+              "key": "cargo",
               "title": "Cargo",
               "description": "",
               "type": "text",
@@ -255,9 +253,8 @@ class MyApp extends StatelessWidget {
               "is_mandatory": false
             },
             {
-              "question_id": "60e0a77c10926d0f006834a5",
               "fields": [],
-              "_id": "60dc6a3dc9fe14577c30d276",
+              "key": "namereview",
               "title": "Nombre del evaluado",
               "description": "",
               "type": "text",
@@ -266,9 +263,8 @@ class MyApp extends StatelessWidget {
               "is_mandatory": false
             },
             {
-              "question_id": "60e0a77c10926d0f006834a5",
               "fields": [],
-              "_id": "60dc6a3dc9fe14577c30d276",
+              "key": "grade",
               "title": "Grado",
               "description": "",
               "type": "text",
@@ -279,11 +275,11 @@ class MyApp extends StatelessWidget {
           ]
         },
         {
-          "questions": [
+          "key": "questions",
+          "properties": [
             {
-              "question_id": "60e0a77c10926d0f006834a0",
+              "key": "conociendo",
               "fields": ["1", "2", "3", "4", "5"],
-              "_id": "60dc6a3dc9fe14577c30d271",
               "title": "Conocimiento del trabajo",
               "description":
                   "Aplica las destrezas y conocimientos necesarios en el cumplimiento de las tareas encomendadas.",
@@ -293,12 +289,13 @@ class MyApp extends StatelessWidget {
               "type": "multiple",
               "direction": "",
               "is_mandatory": false,
-              "validations": {}
+              "validations": {
+                "length": {"min": 10, "max": 20}
+              }
             },
             {
-              "question_id": "60e0a77c10926d0f006834a0",
               "fields": ["1", "2", "3", "4", "5"],
-              "_id": "60dc6a3dc9fe14577c30d271",
+              "key": "calidad",
               "title": "Calidad",
               "description":
                   "Realiza sus trabajos de acuerdo con los requerimientos en terminos contenido, exactitud presentacion y atencion.",
@@ -308,9 +305,8 @@ class MyApp extends StatelessWidget {
               "is_mandatory": false
             },
             {
-              "question_id": "60e0a77c10926d0f006834a0",
               "fields": ["1", "2", "3", "4", "5"],
-              "_id": "60dc6a3dc9fe14577c30d271",
+              "key": "recursos",
               "title": "Utilizacion de recursos",
               "description":
                   "Forma como emplea los equipos y elementos entregados para el desempeño de sus funciones.",
@@ -320,9 +316,8 @@ class MyApp extends StatelessWidget {
               "is_mandatory": false
             },
             {
-              "question_id": "60e0a77c10926d0f006834a0",
               "fields": ["1", "2", "3", "4", "5"],
-              "_id": "60dc6a3dc9fe14577c30d271",
+              "key": "oportunidad",
               "title": "Oportunidad",
               "description": "Entrega los trabajos de acuerdo con lo programado.",
               "remark": true,
@@ -331,9 +326,8 @@ class MyApp extends StatelessWidget {
               "is_mandatory": false
             },
             {
-              "question_id": "60e0a77c10926d0f006834a0",
               "fields": ["1", "2", "3", "4", "5"],
-              "_id": "60dc6a3dc9fe14577c30d271",
+              "key": "disciplina",
               "title": "Disciplina",
               "description":
                   "Mantiene ordenada y aseada su area de trabajo   y demuestra buen comportamiento durante el desarrollo de sus labores.",
@@ -343,9 +337,8 @@ class MyApp extends StatelessWidget {
               "is_mandatory": false
             },
             {
-              "question_id": "60e0a77c10926d0f006834a0",
               "fields": ["1", "2", "3", "4", "5"],
-              "_id": "60dc6a3dc9fe14577c30d271",
+              "key": "compromiso",
               "title": "Compromiso institucional",
               "description":
                   " Asume y transmite el conjunto de valores organizacionales. En su comportamiento  y actitudes demuestra sentido de pertenencia a la Compañía.",
@@ -355,9 +348,8 @@ class MyApp extends StatelessWidget {
               "is_mandatory": false
             },
             {
-              "question_id": "60e0a77c10926d0f006834a0",
               "fields": ["1", "2", "3", "4", "5"],
-              "_id": "60dc6a3dc9fe14577c30d271",
+              "key": "relacion",
               "title": "Relaciones inter personales",
               "description":
                   "Establece y mantiene comunicación con usuarios, superiores, compañeros y colaboradores , propiciando un ambiente laboral de cordialidad y respeto.",
@@ -367,9 +359,8 @@ class MyApp extends StatelessWidget {
               "is_mandatory": false
             },
             {
-              "question_id": "60e0a77c10926d0f006834a0",
               "fields": ["1", "2", "3", "4", "5"],
-              "_id": "60dc6a3dc9fe14577c30d271",
+              "key": "colaboracion",
               "title": "Colaboracion",
               "description":
                   "Aplica las destrezas y conocimientos necesarios en el cumplimiento de las tareas encomendadas.",
@@ -379,9 +370,8 @@ class MyApp extends StatelessWidget {
               "is_mandatory": false
             },
             {
-              "question_id": "60e0a77c10926d0f006834a0",
               "fields": ["1", "2", "3", "4", "5"],
-              "_id": "60dc6a3dc9fe14577c30d271",
+              "key": "confiabilidad",
               "title": "Confiabilidad",
               "description":
                   "Genera credibilidad y confianza frente al manejo de la información y en la ejecución de  sus actividades laborales",
@@ -407,7 +397,7 @@ class MyApp extends StatelessWidget {
               SimpleJsonForm(
                 jsonSchema: sampleData,
                 title: "EVALUACION DE DESEMPEÑO DEL PERSONAL EMBARCADO",
-                titleStyle: TextStyle(
+                titleStyle: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 15,
                 ),

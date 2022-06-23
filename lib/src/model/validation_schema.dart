@@ -1,16 +1,18 @@
 class ValidationSchema {
   final Length? length;
   final FormatType? format;
+  final String message;
 
-  ValidationSchema({this.length, this.format});
+  ValidationSchema({
+    this.length,
+    this.format,
+    required this.message,
+  });
 
   factory ValidationSchema.fromJSON(Map<String, dynamic> json) => ValidationSchema(
-        length: json.containsKey('length')
-            ? Length.fromJSON(
-                json['length'],
-              )
-            : null,
+        length: json['length'] is Map<String, dynamic> ? Length.fromJSON(json['length']) : null,
         format: stringToFormatType[json['type']] ?? FormatType.none,
+        message: json['message'] ?? 'Field is required',
       );
 }
 
