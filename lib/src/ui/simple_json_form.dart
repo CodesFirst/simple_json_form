@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:simple_json_form/simple_json_form.dart';
 import 'package:simple_json_form/src/key/simple_json_form_key.dart';
-import 'package:simple_json_form/src/model/json_schema.dart';
 import 'package:simple_json_form/src/utils/dialog_form.dart';
 import 'package:simple_json_form/src/widgets/form_button.dart';
 import 'package:simple_json_form/src/widgets/simple_json_form_field.dart';
@@ -27,20 +27,14 @@ class SimpleJsonForm extends StatefulWidget {
   //Description style to use description form
   final TextStyle? descriptionStyle;
 
+  //Value for default to use in form
+  final DefaultValues? defaultValues;
+
   //isJustForm to use for show totally form or one for one
   //final bool isJustForm;
 
   //imageUrl to use for send services
   final String imageUrl;
-
-  //To use for text the submit button
-  final String? submitButtonText;
-
-  //To use for text the previous button
-  final String? previousButtonText;
-
-  //To use for text the next button
-  final String? nextButtonText;
 
   //index to use for initial form
   final int index;
@@ -51,11 +45,11 @@ class SimpleJsonForm extends StatefulWidget {
   //widget to use loading form
   final Widget? loading;
 
-  //text for use dialog info
-  final String? validationTitle;
+  //description to use for style text title widget form
+  final TextStyle? descriptionStyleText;
 
-  //text for use dialog info
-  final String? validationDescription;
+  //description to use style text description widget form
+  final TextStyle? titleStyleText;
 
   const SimpleJsonForm({
     Key? key,
@@ -63,18 +57,16 @@ class SimpleJsonForm extends StatefulWidget {
     required this.index,
     required this.imageUrl,
     required this.onSubmit,
+    this.defaultValues,
     this.crossAxisAlignment = CrossAxisAlignment.start,
     this.padding,
-    this.submitButtonText,
-    this.nextButtonText,
-    this.previousButtonText,
     this.title,
     this.description,
     this.descriptionStyle,
     this.titleStyle,
     this.loading,
-    this.validationDescription,
-    this.validationTitle,
+    this.descriptionStyleText,
+    this.titleStyleText,
   }) : super(key: key);
 
   @override
@@ -83,9 +75,11 @@ class SimpleJsonForm extends StatefulWidget {
 
 class _SimpleJsonFormState extends State<SimpleJsonForm> {
   int _indexForm = 0;
+  late DefaultValues defaultValues;
   @override
   void initState() {
     _indexForm = _indexForm;
+    defaultValues = widget.defaultValues ?? DefaultValues();
     super.initState();
   }
 
@@ -110,21 +104,23 @@ class _SimpleJsonFormState extends State<SimpleJsonForm> {
               ),
 
             //show form if exist
-
             ...List.generate(
               widget.jsonSchema.form.length,
               (i) {
                 return Visibility(
                   visible: i == _indexForm,
                   child: Form(
-                    key: SimpleJsonFormKey.keyMapping[widget.jsonSchema.form[i].key],
+                    key: SimpleJsonFormKey
+                        .keyMapping[widget.jsonSchema.form[i].key],
                     child: Column(
                       children: widget.jsonSchema.form[i].properties!
                           .map(
                             (entry) => SimpleJsonFormField(
                               properties: entry,
                               imageUrl: widget.imageUrl,
-                              descriptionTextDecoration: const TextStyle(color: Colors.grey),
+                              descriptionStyleText: widget.descriptionStyleText,
+                              titleStyleText: widget.titleStyleText,
+                              hintDropdownText: defaultValues.hintDropdownText,
                             ),
                           )
                           .toList(),
@@ -134,36 +130,14 @@ class _SimpleJsonFormState extends State<SimpleJsonForm> {
               },
             ),
 
-            // Form(
-            //   key: SimpleJsonFormKey.keyMapping[widget.jsonSchema.data[_indexForm].key],
-            //   child: Column(
-            //     children: widget.jsonSchema.data[_indexForm].questions!
-            //         .map(
-            //           (entry) => SimpleJsonFormField(
-            //             question: entry,
-            //             imageUrl: widget.imageUrl,
-            //             descriptionTextDecoration: const TextStyle(color: Colors.grey),
-            //           ),
-            //         )
-            //         .toList(),
-            //   ),
-            // ),
-
-            // ...widget.jsonSchema.data[_indexForm].questions!.map(
-            //   (entry) => SimpleJsonFormField(
-            //     question: entry,
-            //     imageUrl: widget.imageUrl,
-            //     descriptionTextDecoration: const TextStyle(color: Colors.grey),
-            //   ),
-            // ),
             const SizedBox(height: 10),
             widget.jsonSchema.form.isNotEmpty
                 ? FormButton(
                     lengthForm: widget.jsonSchema.form.length,
                     indexForm: _indexForm,
-                    nextText: widget.nextButtonText ?? 'Next',
-                    previousText: widget.previousButtonText ?? 'Previous',
-                    submitText: widget.submitButtonText ?? 'Submit',
+                    nextText: defaultValues.nextButtonText,
+                    previousText: defaultValues.previousButtonText,
+                    submitText: defaultValues.submitButtonText,
                     onNext: () {
                       final next = _nextForm(_indexForm);
                       if (next) {
@@ -173,12 +147,9 @@ class _SimpleJsonFormState extends State<SimpleJsonForm> {
                       }
                     },
                     onPrevious: () {
-                      //final next = getPreviousData(_indexForm);
-                      //if (next) {
                       setState(() {
                         _indexForm = _indexForm - 1;
                       });
-                      //}
                     },
                     onSubmit: () => widget.onSubmit(_completeForm(_indexForm)),
                   )
@@ -192,63 +163,21 @@ class _SimpleJsonFormState extends State<SimpleJsonForm> {
 
   _completeForm(int index) {
     if (widget.jsonSchema.form.isEmpty) return widget.jsonSchema;
-    final formKey = SimpleJsonFormKey.keyMapping[widget.jsonSchema.form[_indexForm].key];
+    final formKey =
+        SimpleJsonFormKey.keyMapping[widget.jsonSchema.form[_indexForm].key];
     if (formKey?.currentState?.validate() ?? false) return widget.jsonSchema;
     return null;
   }
 
   bool _nextForm(int index) {
     if (widget.jsonSchema.form.isEmpty) return false;
-    final formKey = SimpleJsonFormKey.keyMapping[widget.jsonSchema.form[_indexForm].key];
+    final formKey =
+        SimpleJsonFormKey.keyMapping[widget.jsonSchema.form[_indexForm].key];
     if (formKey?.currentState?.validate() ?? false) return true;
     DialogForm.of(context: context).infoDialog(
-      title: widget.validationTitle,
-      description: widget.validationDescription,
+      title: defaultValues.validationTitle,
+      description: defaultValues.validationDescription,
     );
     return false;
-  }
-
-  bool getPreviousData(int index) {
-    if (widget.jsonSchema.form.isEmpty) return false;
-    final formKey = SimpleJsonFormKey.keyMapping[widget.jsonSchema.form[_indexForm].key];
-    if (formKey?.currentState?.validate() ?? false) return true;
-    return false;
-  }
-}
-
-class _FormBuilderWidget extends StatelessWidget {
-  const _FormBuilderWidget({
-    Key? key,
-    required this.jsonSchema,
-    required this.imageUrl,
-  }) : super(key: key);
-
-  final JsonSchema jsonSchema;
-  final String imageUrl;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: ListView.builder(
-        shrinkWrap: true,
-        itemCount: jsonSchema.form.length,
-        itemBuilder: (context, index) {
-          return Form(
-            key: SimpleJsonFormKey.keyMapping[jsonSchema.form[index].key],
-            child: Column(
-              children: jsonSchema.form[index].properties!
-                  .map(
-                    (entry) => SimpleJsonFormField(
-                      properties: entry,
-                      imageUrl: imageUrl,
-                      descriptionTextDecoration: const TextStyle(color: Colors.grey),
-                    ),
-                  )
-                  .toList(),
-            ),
-          );
-        },
-      ),
-    );
   }
 }

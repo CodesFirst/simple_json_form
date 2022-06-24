@@ -44,10 +44,12 @@ class CustomDropdownWidget extends StatelessWidget {
                   ),
                   decoration: InputDecoration(
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Constants.lightBlueColor, width: 0.0),
+                      borderSide: BorderSide(
+                          color: Constants.lightBlueColor, width: 0.0),
                     ),
-                    border:
-                        OutlineInputBorder(borderSide: BorderSide(color: Constants.lightBlueColor)),
+                    border: OutlineInputBorder(
+                        borderSide:
+                            BorderSide(color: Constants.lightBlueColor)),
                   ),
                   value: dropVal,
                   hint: Row(
@@ -62,7 +64,9 @@ class CustomDropdownWidget extends StatelessWidget {
                           : const SizedBox.shrink(),
                       TextCFirst(
                         title,
-                        colorText: onTap != null ? Constants.grayColor : Constants.grayLightColor,
+                        colorText: onTap != null
+                            ? Constants.grayColor
+                            : Constants.grayLightColor,
                       ),
                     ],
                   ),

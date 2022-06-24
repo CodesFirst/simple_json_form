@@ -81,14 +81,14 @@ class MyApp extends StatelessWidget {
           "properties": [
             {
               "key": "conociendo",
-              "fields": ["1", "2", "3", "4", "5"],
+              "fields": ["como estas en este momento ajaj", "2", "3", "4", "5"],
               "title": "Conocimiento del trabajo",
               "description":
                   "Aplica las destrezas y conocimientos necesarios en el cumplimiento de las tareas encomendadas.",
               "remark": true,
               "remark_label": "Puntaje",
               "remark_title": "Ingrese el Puntaje",
-              "type": "multiple",
+              "type": "checkbox",
               "direction": "",
               "is_mandatory": false,
               "validations": {
@@ -182,12 +182,32 @@ class MyApp extends StatelessWidget {
               "direction": "",
               "is_mandatory": false
             },
+            {
+              "key": "60e0a77c10926d0f006834a1",
+              "fields": [
+                "0km/h",
+                "10km/h",
+                "20km/h",
+                "30km/h",
+                "40km/h",
+                "50km/h",
+                "60km/h",
+                "70km/h",
+                "80km/h"
+              ],
+              "title": "Please provide the high speed of vehicle?",
+              "description": "please select one option given below",
+              "remark": false,
+              "type": "dropdown",
+              "is_mandatory": true,
+            }
           ]
         },
       ]
     });
 
     return MaterialApp(
+      theme: ThemeData.dark(),
       title: 'FormBuilder Example',
       home: Scaffold(
         appBar: AppBar(
@@ -207,9 +227,23 @@ class MyApp extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 index: 0,
                 imageUrl: fileUpload(),
-                submitButtonText: 'Guardar este paquete',
-                nextButtonText: 'Siguiente',
-                previousButtonText: 'Anterior',
+                defaultValues: DefaultValues().copyWith(
+                  nextButtonText: 'Siguiente',
+                  hintDropdownText: 'Elija una opcion',
+                  previousButtonText: 'Anterior',
+                  submitButtonText: 'Enviar',
+                  validationDescription: 'Algunos campos requeridos faltan',
+                  validationTitle: 'Fallo validaciones',
+                  fieldRequired: 'campo es requerido',
+                ),
+                descriptionStyleText: const TextStyle(
+                  color: Colors.lightBlue,
+                ),
+                titleStyleText: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: Colors.blue,
+                ),
                 onSubmit: (val) {
                   if (val == null) {
                     print("no data");

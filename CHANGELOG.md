@@ -1,3 +1,7 @@
 ## 0.0.1
 
-* TODO: Describe initial release.
+* Version Initial
+
+## 0.0.2
+
+* Add default values param

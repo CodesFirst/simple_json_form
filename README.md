@@ -134,14 +134,8 @@ There are several options that allow for more control:
 | `titleStyle`            | title style to use title the form |
 | `description`           | Description general to use the form |
 | `descriptionStyle`      | Description style to use description form |
-| `submitButtonText`      | To use for text the submit button |
-| `previousButtonText`    | To use for text the previous button |
-| `nextButtonText`        |  To use for text the next button |
 | `index`                 | If the data contains mutiple forms passing the index of the form will show the question of that perticular form |
 | `onSubmit`              | This function will take in the map value and pass it to the given function when submit button is pressed |
 | `loading`               | widget to use loading form |
-| `validationTitle`       | text for use dialog info |
-| `validationDescription` | text for use dialog info |
-
-  
+| `defaultValues`         | model to use with values default in form |
 <br>

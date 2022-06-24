@@ -29,5 +29,6 @@ double getpropScreenWidth(double inputWidth, BuildContext context) {
 
 double getpropScreenHeight(double inputHeight, BuildContext context) {
   double screenHeight = Responsive.of(context).width;
-  return (inputHeight / 640.0) * screenHeight; // **este metodo no se usa mucho**
+  return (inputHeight / 640.0) *
+      screenHeight; // **este metodo no se usa mucho**
 }

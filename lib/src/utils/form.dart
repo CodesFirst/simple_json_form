@@ -8,12 +8,14 @@ String? validateEmptyField(String? value, String error) {
 String? validateEmailField(String? value, String error) {
   if (value == null) return null;
   if (value.isEmpty) return error;
-  final regExp = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+  final regExp = RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
   if (!regExp.hasMatch(value)) return 'El formato ingresado es inválido.';
   return value.isEmpty ? error : null;
 }
 
-String? validateEmptyFieldWithLength(String? value, int min, int max, String error) {
+String? validateEmptyFieldWithLength(
+    String? value, int min, int max, String error) {
   if (value == null) return null;
   return value.isEmpty
       ? error
@@ -45,7 +47,8 @@ class NumericalRangeFormatter extends TextInputFormatter {
 
 class UpperCaseTextFormatter extends TextInputFormatter {
   @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
     return TextEditingValue(
       text: newValue.text.toUpperCase(),
       selection: newValue.selection,
@@ -55,7 +58,8 @@ class UpperCaseTextFormatter extends TextInputFormatter {
 
 class LowerCaseTextFormatter extends TextInputFormatter {
   @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
     return TextEditingValue(
       text: newValue.text.toLowerCase(),
       selection: newValue.selection,

@@ -12,7 +12,8 @@ class SimpleJsonFormRemark extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = SimpleJsonFormController.getKeyController('${properties.key}_remark');
+    final controller =
+        SimpleJsonFormController.getKeyController('${properties.key}_remark');
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8),
       child: Column(

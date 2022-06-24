@@ -21,8 +21,8 @@ class DialogForm {
       );
 
   void infoDialog({
-    String? title,
-    String? description,
+    required String title,
+    required String description,
     bool withButton = false,
     Function()? func,
     String? labelButton,
@@ -40,13 +40,13 @@ class DialogForm {
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextCFirst(
-                  title ?? 'Failed validations',
+                  title,
                   fontWeight: FontWeight.bold,
                   fontSize: Responsive.of(buildContext).dp(2.2),
                   colorText: Theme.of(ctx).primaryColor,
                 ),
                 TextCFirst(
-                  description ?? 'Some fields require your validation',
+                  description,
                 ),
                 const SizedBox(
                   height: 20,

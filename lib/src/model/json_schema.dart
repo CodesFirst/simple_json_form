@@ -59,7 +59,8 @@ class JsonSchema {
     return jsonSchema;
   }
 
-  Map<String, dynamic> toJson() => {'form': form.map((v) => v.toJson()).toList()};
+  Map<String, dynamic> toJson() =>
+      {'form': form.map((v) => v.toJson()).toList()};
 }
 
 class FormBuilder {
@@ -75,12 +76,15 @@ class FormBuilder {
   factory FormBuilder.fromJson(Map<String, dynamic> json) => FormBuilder(
         key: json['key'],
         properties: json['properties'] != null
-            ? List<Properties>.from(json['properties'].map((e) => Properties.fromJson(e)))
+            ? List<Properties>.from(
+                json['properties'].map((e) => Properties.fromJson(e)))
             : null,
       );
 
   Map<String, dynamic> toJson() => {
-        'properties': properties == null ? [] : properties!.map((v) => v.toJson()).toList(),
+        'properties': properties == null
+            ? []
+            : properties!.map((v) => v.toJson()).toList(),
       };
 }
 
@@ -116,7 +120,8 @@ class Properties {
   });
 
   factory Properties.fromJson(Map<String, dynamic> json) => Properties(
-        fields: json.containsKey('fields') ? json['fields'].cast<String>() : null,
+        fields:
+            json.containsKey('fields') ? json['fields'].cast<String>() : null,
         key: json['key'],
         title: json['title'],
         description: json['description'],
@@ -127,7 +132,8 @@ class Properties {
         remarkLabel: json['remark_label'],
         remarkTitle: json['remark_title'],
         answer: json['type'] == "checkbox"
-            ? List.generate(json['fields'].cast<String>().length, (index) => false)
+            ? List.generate(
+                json['fields'].cast<String>().length, (index) => false)
             : null,
         validations: json['validations'] is Map<String, dynamic>
             ? ValidationSchema.fromJSON(json['validations'])
