@@ -10,7 +10,7 @@ Json Schema Form: [Instituto Iracema](https://github.com/Instituto-Iracema/flutt
 
 ### Specs
 This library allows you to create a complete form from a json file with
-multiple types of fields `text` , `checkbox`, `multiselect` , `date` , `time`.
+multiple types of fields `text` , `checkbox`, `multiselect` , `date` , `time`, `format1`.
 This package also provides additional remark options.
 
 It has been written **100% in Dart**. ❤️
@@ -21,7 +21,7 @@ It has been written **100% in Dart**. ❤️
 Add the following to your `pubspec.yaml` file:
 ```yaml
 dependencies:
-  simple_json_form: ^0.0.1
+  simple_json_form: ^0.0.3
 ```
 
 <br>
@@ -39,31 +39,129 @@ To integrate the Simple form builder all you need to do is follow the given JSON
 
 // The complete sample is provided in the global folder that can be used as a reference
 
-{
-  "form": [
-	{
-	  "key": "questions",
-	  "properties": [
-	    {
-	      "key": "identifier_boat",
-	      "fields": ["1", "2", "3", "4", "5"],
-	      "title": "This is my title",
-	      "description": "This is my description",
-	      "remark": true,
-	      "remark_label": "points",
-	      "remark_title": "insert to points",
-	      "type": "multiple",
-	      "direction": "",
-	      "is_mandatory": false,
-	      "validations": {
-              "message": "This is my message",
-		      "length": {"min": 10, "max": 20}
-	      }
-	    },
-	  ]
-	},
-  ]
-}
+  //multiple (option button)
+  {
+    "form": [
+      {
+        "key": "informations",
+        "properties": [
+          "key": "identifier",
+          "fields": ["1", "2", "3", "4", "5"],
+          "title": "This is my title",
+          "description": "This is my description",
+          "type": "multiple",
+        ]
+      }
+    ]
+  }
+
+  //checkbox
+  {
+    "form": [
+      {
+        "key": "informations",
+        "properties": [
+          "key": "identifier",
+          "fields": ["1", "2", "3", "4", "5"],
+          "title": "This is my title",
+          "description": "This is my description",
+          "type": "checkbox"
+        ]
+      }
+    ]
+  }
+
+  //text - number
+  {
+    "form": [
+      {
+        "key": "informations",
+        "properties": [
+          "key": "identifier",
+          "title": "This is my title",
+          "description": "This is my description",
+          "type": "text",
+          "is_mandatory": false,
+          "readOnly": true,
+          "validations": {
+                "message": "This is my message",
+            "length": {"min": 10, "max": 20},
+          }
+        ]
+      }
+    ]
+  }
+
+  //date
+  {
+    "form": [
+      {
+        "key": "informations",
+        "properties": [
+          "key": "identifier",
+          "title": "This is my title",
+          "description": "This is my description",
+          "type": "date",
+          "is_mandatory": false,
+        ]
+      }
+    ]
+  }
+
+  //time
+  {
+    "form": [
+      {
+        "key": "informations",
+        "properties": [
+          "key": "identifier_boat",
+          "title": "This is my title",
+          "description": "This is my description",
+          "type": "time",
+          "is_mandatory": false,
+        ]
+      }
+    ]
+  }
+
+  //format1
+  {
+    "form": [
+      {
+        "key": "informations",
+        "properties": [
+          "key": "identifier_boat",
+          "fields": ["1", "2", "3", "4", "5"],
+          "title": "This is my title",
+          "description": "This is my description",
+          "type": "format1",
+          "raw": [
+            {
+              "title": "Menu 1",
+              "description": "description 1",
+              "properties": [
+                {
+                  "key": "key_date",
+                  "title": "date",
+                  "type": "date",
+                },
+              ]
+            },
+            {
+              "title": "Menu 2",
+              "properties": [
+                {
+                  "key": "key_trips",
+                  "title": "Trips",
+                  "type": "text",
+                },
+              ]
+            },
+          ]
+        ]
+      }
+    ]
+  }
 
 ```
 <br>
@@ -71,9 +169,11 @@ To integrate the Simple form builder all you need to do is follow the given JSON
 ### Widget Implementation
 
 ```dart
+import 'dart:convert';
+
+import 'package:example/constants/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:simple_form_builder/formbuilder.dart';
-import 'package:simple_form_builder/global/constant.dart';
+import 'package:simple_json_form/simple_json_form.dart';
 
 void main() => runApp(MyApp());
 
@@ -81,7 +181,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Json Form Example',
+      //theme: ThemeData.dark(),
+      title: 'FormBuilder Example',
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Material App Bar'),
@@ -91,18 +192,32 @@ class MyApp extends StatelessWidget {
             children: [
               SimpleJsonForm(
                 jsonSchema: sampleData,
-                title: "My Title",
+                title: "EVALUACION DE DESEMPEÑO DEL PERSONAL EMBARCADO",
                 titleStyle: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 15,
                 ),
-                description: "My description",
+                description: "EVALUACION DE DESEMPEÑO",
                 crossAxisAlignment: CrossAxisAlignment.center,
                 index: 0,
-                imageUrl: fileUpload(),
-                submitButtonText: 'Send',
-                nextButtonText: 'Next',
-                previousButtonText: 'Previous',
+                imageUrl: '',
+                defaultValues: DefaultValues().copyWith(
+                  nextButtonText: 'Siguiente',
+                  hintDropdownText: 'Elija una opcion',
+                  previousButtonText: 'Anterior',
+                  submitButtonText: 'Enviar',
+                  validationDescription: 'Algunos campos requeridos faltan',
+                  validationTitle: 'Fallo validaciones',
+                  fieldRequired: 'campo es requerido',
+                ),
+                descriptionStyleText: const TextStyle(
+                  color: Colors.lightBlue,
+                ),
+                titleStyleText: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: Colors.blue,
+                ),
                 onSubmit: (val) {
                   if (val == null) {
                     print("no data");

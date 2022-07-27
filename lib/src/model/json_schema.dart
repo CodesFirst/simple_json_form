@@ -1,5 +1,6 @@
 import 'package:simple_json_form/src/controller/simple_json_form_controller.dart';
 import 'package:simple_json_form/src/key/simple_json_form_key.dart';
+import 'package:simple_json_form/src/model/raw_builder.dart';
 import 'package:simple_json_form/src/model/validation_schema.dart';
 
 /// An instance has one of six primitive types, and a range of possible values depending on the type:
@@ -92,28 +93,6 @@ class FormBuilder {
   Map<String, dynamic> toJson() => {
         'properties': properties == null ? [] : properties!.map((v) => v.toJson()).toList(),
       };
-}
-
-class RawBuilder {
-  RawBuilder({
-    required this.title,
-    required this.properties,
-    this.description,
-  });
-
-  factory RawBuilder.fromJson(Map<String, dynamic> json) => RawBuilder(
-        properties: List<Properties>.from(json['properties'].map((e) => Properties.fromJson(e))),
-        title: json['title'],
-        description: json['description'],
-      );
-
-  Map<String, dynamic> toJson() => {
-        'properties': properties.map((v) => v.toJson()).toList(),
-      };
-
-  final List<Properties> properties;
-  final String title;
-  final String? description;
 }
 
 class Properties {

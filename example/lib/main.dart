@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
                 description: "EVALUACION DE DESEMPEÑO",
                 crossAxisAlignment: CrossAxisAlignment.center,
                 index: 0,
-                imageUrl: fileUpload(),
+                imageUrl: '',
                 defaultValues: DefaultValues().copyWith(
                   nextButtonText: 'Siguiente',
                   hintDropdownText: 'Elija una opcion',
@@ -61,9 +61,5 @@ class MyApp extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  fileUpload() {
-    return "";
   }
 }

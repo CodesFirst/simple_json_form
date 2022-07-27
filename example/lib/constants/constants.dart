@@ -15,17 +15,6 @@ final sampleData = JsonSchema.fromJson({
           "title": "BP",
           "type": "text",
         },
-        {
-          "key": "trips",
-          "title": "Viaje",
-          "type": "text",
-        },
-        {
-          "key": "fulfilled",
-          "title": "Cumplimiento del trabajo",
-          "type": "multiple",
-          "fields": ["CUMPLIDO", "NO CUMPLIDO"],
-        },
       ]
     },
     {
@@ -41,23 +30,8 @@ final sampleData = JsonSchema.fromJson({
               "description": "Llenado de cubas",
               "properties": [
                 {
-                  "key": "cuba1",
-                  "title": "Cuba",
-                  "type": "text",
-                },
-                {
-                  "key": "washed1",
-                  "title": "Lavado",
-                  "type": "text",
-                },
-                {
-                  "key": "executedBy1",
-                  "title": "Ejecutado por",
-                  "type": "text",
-                },
-                {
-                  "key": "responsible1",
-                  "title": "Responsable",
+                  "key": "key_text2",
+                  "title": "Title text",
                   "type": "text",
                 },
               ]
@@ -66,23 +40,8 @@ final sampleData = JsonSchema.fromJson({
               "title": "Menu 2",
               "properties": [
                 {
-                  "key": "cuba2",
-                  "title": "Cuba",
-                  "type": "text",
-                },
-                {
-                  "key": "washed2",
-                  "title": "Lavado",
-                  "type": "text",
-                },
-                {
-                  "key": "executedBy2",
-                  "title": "Ejecutado por",
-                  "type": "text",
-                },
-                {
-                  "key": "responsible2",
-                  "title": "Responsable",
+                  "key": "date2",
+                  "title": "Date of title",
                   "type": "text",
                 },
               ]

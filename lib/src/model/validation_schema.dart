@@ -1,19 +1,16 @@
 class ValidationSchema {
   final FormatType format;
   final Length length;
-  final int maxline;
   final String message;
 
   ValidationSchema({
     required this.message,
     required this.format,
     required this.length,
-    this.maxline = 0,
   });
 
   factory ValidationSchema.fromJSON(Map<String, dynamic> json) => ValidationSchema(
         length: Length.fromJSON(json['length'] ?? {}),
-        maxline: json['maxline'] ?? 0,
         format: stringToFormatType[json['type']] ?? FormatType.none,
         message: json['message'] ?? 'Field is required',
       );

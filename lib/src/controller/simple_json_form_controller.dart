@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:simple_json_form/simple_json_form.dart';
+import 'package:simple_json_form/src/model/raw_builder.dart';
 
 class SimpleJsonFormController {
   SimpleJsonFormController({required this.jsonSchema}) {
