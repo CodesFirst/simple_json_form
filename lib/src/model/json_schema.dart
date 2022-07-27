@@ -8,31 +8,41 @@ enum JsonSchemaType {
   /// A "true" or "false" value, from the JSON "true" or "false" value
   multiple,
 
-  /// object:
-  /// An unordered set of properties mapping a string to an instance, from the JSON "object" value
-  dropdown,
-
-  /// array:
+  /// checkbox:
   /// An ordered list of instances, from the JSON "array" value
   checkbox,
+
+  /// dropdown:
+  /// An unordered set of properties mapping a string to an instance, from the JSON "object" value
+  dropdown,
 
   /// number:
   /// An arbitrary-precision, base-10 decimal number value, from the JSON "number" value
   number,
 
-  /// string:
-  /// A string of Unicode code points, from the JSON "string" value
+  /// dateTime:
+  /// A string of datetime
   datetime,
 
+  /// time:
+  /// A string of time
   time,
 
+  /// date:
+  /// A string of date
   date,
 
+  /// file:
+  /// A string of file
   file,
 
+  /// string:
+  /// A string of Unicode code points, from the JSON "string" value
   text,
 
-  string,
+  /// Format 1
+  /// Only Array of String dynamic value  use field raw.
+  format1,
 
   /// SPECIAL_CASE_NONE:
   /// A special case for when the type is not defined.
@@ -59,8 +69,7 @@ class JsonSchema {
     return jsonSchema;
   }
 
-  Map<String, dynamic> toJson() =>
-      {'form': form.map((v) => v.toJson()).toList()};
+  Map<String, dynamic> toJson() => {'form': form.map((v) => v.toJson()).toList()};
 }
 
 class FormBuilder {
@@ -76,67 +85,69 @@ class FormBuilder {
   factory FormBuilder.fromJson(Map<String, dynamic> json) => FormBuilder(
         key: json['key'],
         properties: json['properties'] != null
-            ? List<Properties>.from(
-                json['properties'].map((e) => Properties.fromJson(e)))
+            ? List<Properties>.from(json['properties'].map((e) => Properties.fromJson(e)))
             : null,
       );
 
   Map<String, dynamic> toJson() => {
-        'properties': properties == null
-            ? []
-            : properties!.map((v) => v.toJson()).toList(),
+        'properties': properties == null ? [] : properties!.map((v) => v.toJson()).toList(),
       };
 }
 
-class Properties {
-  final String key;
-  final String? title;
-  final String? description;
-  final List<String>? fields;
-  final int? maxline;
-  final bool isMandatory;
-  final JsonSchemaType type;
-  final String? remarkLabel;
-  final String? remarkTitle;
-  final bool remark;
-  final ValidationSchema? validations;
-  dynamic answer;
-  String? remarkData;
+class RawBuilder {
+  RawBuilder({
+    required this.title,
+    required this.properties,
+    this.description,
+  });
 
+  factory RawBuilder.fromJson(Map<String, dynamic> json) => RawBuilder(
+        properties: List<Properties>.from(json['properties'].map((e) => Properties.fromJson(e))),
+        title: json['title'],
+        description: json['description'],
+      );
+
+  Map<String, dynamic> toJson() => {
+        'properties': properties.map((v) => v.toJson()).toList(),
+      };
+
+  final List<Properties> properties;
+  final String title;
+  final String? description;
+}
+
+class Properties {
   Properties({
     required this.key,
     required this.type,
-    this.fields,
-    this.title,
+    required this.title,
+    required this.readOnly,
+    required this.isRequired,
+    this.raw,
     this.description,
+    this.fields,
     this.validations,
-    this.maxline,
-    this.remarkLabel,
-    this.remarkTitle,
-    this.remarkData,
+    this.maxLine,
     this.answer,
-    this.isMandatory = false,
-    this.remark = false,
   });
 
   factory Properties.fromJson(Map<String, dynamic> json) => Properties(
-        fields:
-            json.containsKey('fields') ? json['fields'].cast<String>() : null,
+        fields: json.containsKey('fields') ? json['fields'].cast<String>() : null,
         key: json['key'],
         title: json['title'],
         description: json['description'],
-        remark: json['remark'],
         type: stringToJsonSchemaType[json['type']] ?? JsonSchemaType.none,
-        maxline: json["maxline"] ?? 1,
-        isMandatory: json['is_mandatory'] ?? false,
-        remarkLabel: json['remark_label'],
-        remarkTitle: json['remark_title'],
+        maxLine: json["maxline"],
+        isRequired: json['is_mandatory'] ?? false,
+        readOnly: json['readOnly'] ?? false,
         answer: json['type'] == "checkbox"
-            ? List.generate(
-                json['fields'].cast<String>().length, (index) => false)
+            ? List.generate(json['fields'].cast<String>().length, (index) => false)
             : null,
         validations: json['validations'] is Map<String, dynamic>
             ? ValidationSchema.fromJSON(json['validations'])
+            : null,
+        raw: json.containsKey('raw')
+            ? List<RawBuilder>.from(json['raw'].map((el) => RawBuilder.fromJson(el)))
             : null,
       );
 
@@ -146,14 +157,10 @@ class Properties {
     data['key'] = key;
     data['title'] = title;
     data['description'] = description;
-    data['remark'] = remark;
-    data["remark_data"] = remarkData;
     data['type'] = type.toString();
-    data['is_mandatory'] = isMandatory;
-    data["maxline"] = maxline;
-    data["remark_label"] = remarkLabel;
+    data['is_mandatory'] = isRequired;
+    data["maxline"] = maxLine;
     data["answer"] = answer.toString();
-    data["remark_title"] = remarkTitle;
     return data;
   }
 
@@ -161,30 +168,82 @@ class Properties {
     String? key,
     String? title,
     String? description,
-    List<String>? fields,
-    int? maxline,
-    bool? isMandatory,
+    int? maxLine,
+    bool? readOnly,
+    bool? isRequired,
     JsonSchemaType? type,
-    String? remarkLabel,
-    String? remarkTitle,
-    String? remarkData,
+    List<String>? fields,
     dynamic answer,
-    bool? remark,
   }) =>
       Properties(
         answer: answer ?? this.answer,
         description: description ?? this.description,
         fields: fields ?? this.fields,
-        isMandatory: isMandatory ?? this.isMandatory,
-        maxline: maxline ?? this.maxline,
-        remark: remark ?? this.remark,
-        remarkData: remarkData ?? this.remarkData,
-        remarkLabel: remarkLabel ?? this.remarkLabel,
-        remarkTitle: remarkTitle ?? this.remarkTitle,
+        isRequired: isRequired ?? this.isRequired,
+        maxLine: maxLine ?? this.maxLine,
+        readOnly: readOnly ?? this.readOnly,
         key: key ?? this.key,
         title: title ?? this.title,
         type: type ?? this.type,
       );
+
+  /// A key for use controller and MUST be unique
+  final String key;
+
+  /// A descriptive title of the element.
+  final String title;
+
+  /// A long description of the element. Used in hover menus and suggestions.
+  final String? description;
+
+  /// The value of this keyword MUST be either a string or an array. If it is an array, elements of the array MUST be strings and MUST be unique.
+  ///
+  /// String values MUST be one of the six primitive types ("null", "boolean", "object", "array", "number", or "string"), or "integer" which matches any number with a zero fractional part.
+  ///
+  /// An instance validates if and only if the instance is in any of the sets listed for this keyword.
+  final JsonSchemaType type;
+
+  /// required
+  ///
+  /// The value MUST be strings. \
+  final bool isRequired;
+
+  /// The value of these keywords MUST be a boolean. When multiple occurrences \
+  ///  of these keywords are applicable to a single sub-instance, the resulting \
+  ///  behavior SHOULD be as for a true value if any occurrence specifies a true \
+  ///  value, and SHOULD be as for a false value otherwise.
+  ///
+  /// If "readOnly" has a value of boolean true, it indicates that the value of \
+  ///  the instance is managed exclusively by the owning authority, and attempts \
+  ///  by an application to modify the value of this property are expected to be \
+  ///  ignored or rejected by that owning authority.
+  final bool readOnly;
+
+  /// The value MUST be int or null
+  /// Maxline use for input object
+  final int? maxLine;
+
+  /// The value MUST be list of string or null
+  /// fields use for form type checkbox, option, and header formater
+  ///
+  final List<String>? fields;
+
+  //PUT OFF ==>
+  // final String? remarkLabel;
+  // final String? remarkTitle;
+  // final bool remark;
+  // String? remarkData;
+  //<==
+
+  /// Validation
+  /// Object use for model validation
+  final ValidationSchema? validations;
+
+  /// raw
+  /// Object use for model
+  final List<RawBuilder>? raw;
+
+  dynamic answer;
 }
 
 Map<String, JsonSchemaType> stringToJsonSchemaType = {
@@ -197,6 +256,6 @@ Map<String, JsonSchemaType> stringToJsonSchemaType = {
   'date': JsonSchemaType.date,
   'file': JsonSchemaType.file,
   'text': JsonSchemaType.text,
-  'string': JsonSchemaType.string,
+  'format1': JsonSchemaType.format1,
   'none': JsonSchemaType.none,
 };

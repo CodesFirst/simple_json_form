@@ -14,13 +14,33 @@ class SimpleJsonFormController {
     Map<String, TextEditingController> keyMapping = {};
     for (var entry in jsonSchema.form) {
       for (Properties property in entry.properties ?? []) {
-        if (property.remark) {
-          keyMapping['${property.key}_remark'] = TextEditingController();
+        // if (property.remark) {
+        //   keyMapping['${property.key}_remark'] = TextEditingController();
+        // }
+        if (property.type == JsonSchemaType.format1) {
+          if (property.raw != null) {
+            final mapRaw = generateKeyMappingFormBuilder(property.raw!);
+            keyMapping.addAll(mapRaw);
+          }
         }
 
         if (property.type == JsonSchemaType.text ||
             property.type == JsonSchemaType.number ||
-            property.type == JsonSchemaType.string ||
+            property.type == JsonSchemaType.date ||
+            property.type == JsonSchemaType.time) {
+          keyMapping[property.key] = TextEditingController();
+        }
+      }
+    }
+    return keyMapping;
+  }
+
+  Map<String, TextEditingController> generateKeyMappingFormBuilder(List<RawBuilder> formBuilders) {
+    Map<String, TextEditingController> keyMapping = {};
+    for (var entry in formBuilders) {
+      for (Properties property in entry.properties) {
+        if (property.type == JsonSchemaType.text ||
+            property.type == JsonSchemaType.number ||
             property.type == JsonSchemaType.date ||
             property.type == JsonSchemaType.time) {
           keyMapping[property.key] = TextEditingController();

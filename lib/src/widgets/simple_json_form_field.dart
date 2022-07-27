@@ -7,7 +7,6 @@ import 'package:simple_json_form/src/utils/form.dart';
 import 'package:simple_json_form/src/utils/responsive.dart';
 import 'package:simple_json_form/src/utils/utils.dart';
 import 'package:simple_json_form/src/widgets/input_text.dart';
-import 'package:simple_json_form/src/widgets/simple_json_form_remark.dart';
 
 class SimpleJsonFormField extends StatefulWidget {
   const SimpleJsonFormField({
@@ -42,14 +41,13 @@ class _SimpleJsonFormFieldState extends State<SimpleJsonFormField> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (widget.properties.title != null)
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.9,
-                      child: Text(
-                        widget.properties.title!,
-                        style: widget.titleStyleText,
-                      ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: Text(
+                      widget.properties.title,
+                      style: widget.titleStyleText,
                     ),
+                  ),
                   if (widget.properties.description != null)
                     Text(
                       widget.properties.description!,
@@ -65,9 +63,6 @@ class _SimpleJsonFormFieldState extends State<SimpleJsonFormField> {
                 title: Text(
                   entry,
                   style: TextStyle(
-                    color: widget.properties.answer != entry
-                        ? Colors.grey
-                        : Colors.black,
                     fontWeight: FontWeight.normal,
                     fontSize: Responsive.of(context).dp(1.8),
                   ),
@@ -78,11 +73,11 @@ class _SimpleJsonFormFieldState extends State<SimpleJsonFormField> {
                 },
               ),
             ),
-            widget.properties.remark
-                ? SimpleJsonFormRemark(
-                    properties: widget.properties,
-                  )
-                : const SizedBox.shrink(),
+            // widget.properties.remark
+            //     ? SimpleJsonFormRemark(
+            //         properties: widget.properties,
+            //       )
+            //     : const SizedBox.shrink(),
           ],
         );
       case JsonSchemaType.dropdown:
@@ -94,14 +89,13 @@ class _SimpleJsonFormFieldState extends State<SimpleJsonFormField> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (widget.properties.title != null)
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.9,
-                      child: Text(
-                        widget.properties.title!,
-                        style: widget.titleStyleText,
-                      ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: Text(
+                      widget.properties.title,
+                      style: widget.titleStyleText,
                     ),
+                  ),
                   if (widget.properties.description != null)
                     Text(
                       widget.properties.description!,
@@ -119,11 +113,10 @@ class _SimpleJsonFormFieldState extends State<SimpleJsonFormField> {
                 iconEnabledColor: Constants.lightBlueColor,
                 decoration: InputDecoration(
                   enabledBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Constants.lightBlueColor, width: 0.0),
+                    borderSide: BorderSide(color: Constants.lightBlueColor, width: 0.0),
                   ),
-                  border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Constants.lightBlueColor)),
+                  border:
+                      OutlineInputBorder(borderSide: BorderSide(color: Constants.lightBlueColor)),
                 ),
                 hint: Text(widget.hintDropdownText),
                 items: widget.properties.fields!.map(
@@ -141,11 +134,11 @@ class _SimpleJsonFormFieldState extends State<SimpleJsonFormField> {
                 },
               ),
             ),
-            widget.properties.remark
-                ? SimpleJsonFormRemark(
-                    properties: widget.properties,
-                  )
-                : const SizedBox.shrink(),
+            // widget.properties.remark
+            //     ? SimpleJsonFormRemark(
+            //         properties: widget.properties,
+            //       )
+            //     : const SizedBox.shrink(),
           ],
         );
 
@@ -158,14 +151,13 @@ class _SimpleJsonFormFieldState extends State<SimpleJsonFormField> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (widget.properties.title != null)
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.9,
-                      child: Text(
-                        widget.properties.title!,
-                        style: widget.titleStyleText,
-                      ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: Text(
+                      widget.properties.title,
+                      style: widget.titleStyleText,
                     ),
+                  ),
                   if (widget.properties.description != null)
                     Text(
                       widget.properties.description!,
@@ -181,35 +173,31 @@ class _SimpleJsonFormFieldState extends State<SimpleJsonFormField> {
                 title: Text(
                   entry,
                   style: TextStyle(
-                    color: widget.properties.answer[
-                                widget.properties.fields!.indexOf(entry)] !=
-                            true
-                        ? Colors.grey
-                        : Colors.black,
+                    color:
+                        widget.properties.answer[widget.properties.fields!.indexOf(entry)] != true
+                            ? Colors.grey
+                            : Colors.black,
                     fontWeight: FontWeight.normal,
                     fontSize: Responsive.of(context).dp(1.8),
                   ),
                 ),
-                value: widget.properties
-                    .answer[widget.properties.fields!.indexOf(entry)],
+                value: widget.properties.answer[widget.properties.fields!.indexOf(entry)],
                 onChanged: (value) {
-                  widget.properties
-                      .answer[widget.properties.fields!.indexOf(entry)] = value;
+                  widget.properties.answer[widget.properties.fields!.indexOf(entry)] = value;
                   setState(() {});
                 },
               ),
             ),
-            widget.properties.remark
-                ? SimpleJsonFormRemark(
-                    properties: widget.properties,
-                  )
-                : const SizedBox.shrink(),
+            // widget.properties.remark
+            //     ? SimpleJsonFormRemark(
+            //         properties: widget.properties,
+            //       )
+            //     : const SizedBox.shrink(),
           ],
         );
 
       case JsonSchemaType.time:
-        final controller =
-            SimpleJsonFormController.getKeyController(widget.properties.key);
+        final controller = SimpleJsonFormController.getKeyController(widget.properties.key);
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -222,34 +210,32 @@ class _SimpleJsonFormFieldState extends State<SimpleJsonFormField> {
                 controller: controller,
                 readOnly: true,
                 onTap: () => selectTime(context, controller),
-                validator: widget.properties.isMandatory
+                validator: widget.properties.isRequired
                     ? (value) => validateEmptyFieldWithLength(
                           value,
-                          widget.properties.validations?.length?.min ?? 1,
-                          widget.properties.validations?.length?.max ?? 100,
-                          widget.properties.validations?.message ??
-                              'Field is required',
+                          widget.properties.validations?.length.min ?? 1,
+                          widget.properties.validations?.length.max ?? 100,
+                          widget.properties.validations?.message ?? 'Field is required',
                         )
                     : null,
                 labelText: widget.properties.description,
-                maxLines: widget.properties.maxline,
+                maxLines: widget.properties.maxLine,
                 onChanged: (value) {
                   widget.properties.answer = value;
                 },
                 title: widget.properties.title,
               ),
             ),
-            widget.properties.remark
-                ? SimpleJsonFormRemark(
-                    properties: widget.properties,
-                  )
-                : const SizedBox.shrink(),
+            // widget.properties.remark
+            //     ? SimpleJsonFormRemark(
+            //         properties: widget.properties,
+            //       )
+            //     : const SizedBox.shrink(),
           ],
         );
 
       case JsonSchemaType.date:
-        final controller =
-            SimpleJsonFormController.getKeyController(widget.properties.key);
+        final controller = SimpleJsonFormController.getKeyController(widget.properties.key);
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -262,28 +248,27 @@ class _SimpleJsonFormFieldState extends State<SimpleJsonFormField> {
                 controller: controller,
                 readOnly: true,
                 onTap: () => selectDate(context, controller),
-                validator: widget.properties.isMandatory
+                validator: widget.properties.isRequired
                     ? (value) => validateEmptyFieldWithLength(
                           value,
-                          widget.properties.validations?.length?.min ?? 1,
-                          widget.properties.validations?.length?.max ?? 100,
-                          widget.properties.validations?.message ??
-                              'Field is required',
+                          widget.properties.validations?.length.min ?? 1,
+                          widget.properties.validations?.length.max ?? 100,
+                          widget.properties.validations?.message ?? 'Field is required',
                         )
                     : null,
                 labelText: widget.properties.description,
-                maxLines: widget.properties.maxline,
+                maxLines: widget.properties.maxLine,
                 onChanged: (value) {
                   widget.properties.answer = value;
                 },
                 title: widget.properties.title,
               ),
             ),
-            widget.properties.remark
-                ? SimpleJsonFormRemark(
-                    properties: widget.properties,
-                  )
-                : const SizedBox.shrink(),
+            // widget.properties.remark
+            //     ? SimpleJsonFormRemark(
+            //         properties: widget.properties,
+            //       )
+            //     : const SizedBox.shrink(),
           ],
         );
 
@@ -296,14 +281,13 @@ class _SimpleJsonFormFieldState extends State<SimpleJsonFormField> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (widget.properties.title != null)
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.9,
-                      child: Text(
-                        widget.properties.title!,
-                        style: widget.titleStyleText,
-                      ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: Text(
+                      widget.properties.title,
+                      style: widget.titleStyleText,
                     ),
+                  ),
                   if (widget.properties.description != null)
                     Text(
                       widget.properties.description!,
@@ -364,17 +348,16 @@ class _SimpleJsonFormFieldState extends State<SimpleJsonFormField> {
                 ],
               ),
             ),
-            widget.properties.remark
-                ? SimpleJsonFormRemark(
-                    properties: widget.properties,
-                  )
-                : const SizedBox.shrink(),
+            // widget.properties.remark
+            //     ? SimpleJsonFormRemark(
+            //         properties: widget.properties,
+            //       )
+            //     : const SizedBox.shrink(),
           ],
         );
 
-      case JsonSchemaType.text:
-        final controller =
-            SimpleJsonFormController.getKeyController(widget.properties.key);
+      case JsonSchemaType.number:
+        final controller = SimpleJsonFormController.getKeyController(widget.properties.key);
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -385,18 +368,19 @@ class _SimpleJsonFormFieldState extends State<SimpleJsonFormField> {
               ),
               child: InputText(
                 controller: controller,
-                validator: widget.properties.isMandatory
+                keyboardType: TextInputType.number,
+                validator: widget.properties.isRequired
                     ? (value) => validateEmptyFieldWithLength(
                           value,
-                          widget.properties.validations?.length?.min ?? 1,
-                          widget.properties.validations?.length?.max ?? 100,
-                          widget.properties.validations?.message ??
-                              'Field is required',
+                          widget.properties.validations?.length.min ?? 1,
+                          widget.properties.validations?.length.max ?? 100,
+                          widget.properties.validations?.message ?? 'Field is required',
                         )
                     : null,
                 labelText: widget.properties.description,
                 title: widget.properties.title,
-                maxLines: widget.properties.maxline,
+                readOnly: widget.properties.readOnly,
+                maxLines: widget.properties.maxLine,
                 onChanged: (value) {
                   //setState(() {
                   widget.properties.answer = value;
@@ -404,12 +388,89 @@ class _SimpleJsonFormFieldState extends State<SimpleJsonFormField> {
                 },
               ),
             ),
-            widget.properties.remark
-                ? SimpleJsonFormRemark(
-                    properties: widget.properties,
-                  )
-                : const SizedBox.shrink(),
+            // widget.properties.remark
+            //     ? SimpleJsonFormRemark(
+            //         properties: widget.properties,
+            //       )
+            //     : const SizedBox.shrink(),
           ],
+        );
+
+      case JsonSchemaType.text:
+        final controller = SimpleJsonFormController.getKeyController(widget.properties.key);
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 8.0,
+                horizontal: 16,
+              ),
+              child: InputText(
+                controller: controller,
+                validator: widget.properties.isRequired
+                    ? (value) => validateEmptyFieldWithLength(
+                          value,
+                          widget.properties.validations?.length.min ?? 1,
+                          widget.properties.validations?.length.max ?? 100,
+                          widget.properties.validations?.message ?? 'Field is required',
+                        )
+                    : null,
+                labelText: widget.properties.description,
+                title: widget.properties.title,
+                maxLines: widget.properties.maxLine,
+                readOnly: widget.properties.readOnly,
+                onChanged: (value) {
+                  //setState(() {
+                  widget.properties.answer = value;
+                  //});
+                },
+              ),
+            ),
+            // widget.properties.remark
+            //     ? SimpleJsonFormRemark(
+            //         properties: widget.properties,
+            //       )
+            //     : const SizedBox.shrink(),
+          ],
+        );
+      case JsonSchemaType.format1:
+        final raw = widget.properties.raw;
+        if (raw == null) return const SizedBox.shrink();
+        List<Widget> widgetFormat1 = [];
+        int index = 1;
+        for (var entry in raw) {
+          List<Widget> widgetTemp = [];
+          for (Properties property in entry.properties) {
+            widgetTemp.add(SimpleJsonFormField(
+              properties: property,
+              imageUrl: widget.imageUrl,
+              descriptionStyleText: widget.descriptionStyleText,
+              titleStyleText: widget.titleStyleText,
+              hintDropdownText: widget.hintDropdownText,
+            ));
+          }
+          widgetFormat1.add(
+            ExpansionTile(
+              title: Text(
+                entry.title,
+                style: widget.titleStyleText,
+              ),
+              subtitle: Text(
+                entry.description ?? '',
+                style: widget.descriptionStyleText,
+              ),
+              controlAffinity: ListTileControlAffinity.leading,
+              children: <Widget>[...widgetTemp],
+            ),
+          );
+        }
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Column(
+            children: [...widgetFormat1],
+          ),
         );
 
       default:
