@@ -10,6 +10,7 @@ class DefaultValues {
     required this.validationDescription,
     required this.validationTitle,
     required this.fieldRequired,
+    required this.isRTL,
   });
 
   factory DefaultValues({
@@ -20,6 +21,7 @@ class DefaultValues {
     String? validationDescription,
     String? hintDropdownText,
     String? fieldRequired,
+    bool? isRTL,
   }) {
     submitButtonText = submitButtonText ??= 'Submit';
     previousButtonText = previousButtonText ??= 'Previous';
@@ -29,6 +31,7 @@ class DefaultValues {
         validationDescription ??= 'Some fields require your validation';
     hintDropdownText = hintDropdownText ??= 'Select option';
     fieldRequired = fieldRequired ??= 'Field is required';
+    isRTL = isRTL ??= false;
     return DefaultValues.raw(
       hintDropdownText: hintDropdownText,
       nextButtonText: nextButtonText,
@@ -37,6 +40,7 @@ class DefaultValues {
       validationDescription: validationDescription,
       validationTitle: validationTitle,
       fieldRequired: fieldRequired,
+      isRTL: isRTL,
     );
   }
 
@@ -48,6 +52,7 @@ class DefaultValues {
     String? validationDescription,
     String? hintDropdownText,
     String? fieldRequired,
+    bool? isRTL,
   }) =>
       DefaultValues(
         hintDropdownText: hintDropdownText ?? this.hintDropdownText,
@@ -58,6 +63,7 @@ class DefaultValues {
             validationDescription ?? this.validationDescription,
         validationTitle: validationTitle ?? this.validationTitle,
         fieldRequired: fieldRequired ?? this.fieldRequired,
+        isRTL: isRTL ?? this.isRTL,
       );
 
   //To use for text the submit button
@@ -79,4 +85,6 @@ class DefaultValues {
   final String hintDropdownText;
 
   final String fieldRequired;
+  // isRTL used to handle rtl direction of widget
+  final bool isRTL;
 }

@@ -32,9 +32,11 @@ class PrimaryButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.symmetric(horizontal: 40),
         primary: buttonColor ?? Theme.of(context).primaryColor,
+        backgroundColor: Colors.white,
         minimumSize: Size(width, height),
+        side: BorderSide(color: Theme.of(context).primaryColor),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(radius),
+          borderRadius: BorderRadius.circular(30.0),
         ),
         alignment: alignment,
         elevation: elevation,
@@ -42,7 +44,10 @@ class PrimaryButton extends StatelessWidget {
       onPressed: onPressed,
       child: Text(
         text,
-        style: const TextStyle(fontWeight: FontWeight.w700).merge(textStyle),
+        style: const TextStyle(
+          color: Colors.black,
+          fontWeight: FontWeight.normal,
+        ).merge(textStyle),
         textAlign: TextAlign.center,
         overflow: overflow,
       ),
