@@ -9,7 +9,8 @@ class ValidationSchema {
     required this.length,
   });
 
-  factory ValidationSchema.fromJSON(Map<String, dynamic> json) => ValidationSchema(
+  factory ValidationSchema.fromJSON(Map<String, dynamic> json) =>
+      ValidationSchema(
         length: Length.fromJSON(json['length'] ?? {}),
         format: stringToFormatType[json['type']] ?? FormatType.none,
         message: json['message'] ?? 'Field is required',

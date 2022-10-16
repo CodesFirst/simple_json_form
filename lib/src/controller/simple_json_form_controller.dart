@@ -36,7 +36,8 @@ class SimpleJsonFormController {
     return keyMapping;
   }
 
-  Map<String, TextEditingController> generateKeyMappingFormBuilder(List<RawBuilder> formBuilders) {
+  Map<String, TextEditingController> generateKeyMappingFormBuilder(
+      List<RawBuilder> formBuilders) {
     Map<String, TextEditingController> keyMapping = {};
     for (var entry in formBuilders) {
       for (Properties property in entry.properties) {

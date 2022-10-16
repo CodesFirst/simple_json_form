@@ -110,8 +110,7 @@ class _SimpleJsonFormState extends State<SimpleJsonForm> {
                 return Visibility(
                   visible: i == _indexForm,
                   child: Form(
-                    key: SimpleJsonFormKey
-                        .keyMapping[widget.jsonSchema.form[i].key],
+                    key: SimpleJsonFormKey.generateFormKeyMapping(),
                     child: Column(
                       children: widget.jsonSchema.form[i].properties!
                           .map(
@@ -121,6 +120,7 @@ class _SimpleJsonFormState extends State<SimpleJsonForm> {
                               descriptionStyleText: widget.descriptionStyleText,
                               titleStyleText: widget.titleStyleText,
                               hintDropdownText: defaultValues.hintDropdownText,
+                              isRTL: defaultValues.isRTL,
                             ),
                           )
                           .toList(),
@@ -163,16 +163,14 @@ class _SimpleJsonFormState extends State<SimpleJsonForm> {
 
   _completeForm(int index) {
     if (widget.jsonSchema.form.isEmpty) return widget.jsonSchema;
-    final formKey =
-        SimpleJsonFormKey.keyMapping[widget.jsonSchema.form[_indexForm].key];
+    final formKey = SimpleJsonFormKey.generateFormKeyMapping();
     if (formKey?.currentState?.validate() ?? false) return widget.jsonSchema;
     return null;
   }
 
   bool _nextForm(int index) {
     if (widget.jsonSchema.form.isEmpty) return false;
-    final formKey =
-        SimpleJsonFormKey.keyMapping[widget.jsonSchema.form[_indexForm].key];
+    final formKey = SimpleJsonFormKey.generateFormKeyMapping();
     if (formKey?.currentState?.validate() ?? false) return true;
     DialogForm.of(context: context).infoDialog(
       title: defaultValues.validationTitle,

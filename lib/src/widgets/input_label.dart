@@ -5,10 +5,12 @@ class InputLabel extends StatelessWidget {
     Key? key,
     required this.title,
     required this.labelColor,
+    required this.isRTL,
   }) : super(key: key);
 
   final String? title;
   final Color? labelColor;
+  final bool isRTL;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +18,8 @@ class InputLabel extends StatelessWidget {
       visible: title != null,
       child: Container(
         margin: const EdgeInsets.only(bottom: 10),
-        alignment: Alignment.centerLeft,
+        alignment:
+            isRTL == false ? Alignment.centerLeft : Alignment.centerRight,
         child: Text(
           title ?? '',
           style: TextStyle(

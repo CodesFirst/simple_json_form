@@ -16,4 +16,9 @@ class SimpleJsonFormKey {
     }
     return keyMapping;
   }
+
+  static final formKey = GlobalKey<FormState>();
+  static GlobalKey<FormState> generateFormKeyMapping() {
+    return formKey;
+  }
 }

@@ -26,6 +26,7 @@ class InputText extends StatelessWidget {
     this.labelColor,
     this.maxLines,
     this.errorMaxLines,
+    required this.isRTL,
   }) : super(key: key);
 
   final TextEditingController? controller;
@@ -48,6 +49,7 @@ class InputText extends StatelessWidget {
   final int? errorMaxLines;
   final int? maxLines;
   final TextCapitalization textCapitalization;
+  final bool isRTL;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +59,11 @@ class InputText extends StatelessWidget {
       margin: margin,
       child: Column(
         children: [
-          InputLabel(title: title, labelColor: labelColor),
+          InputLabel(
+            title: title,
+            labelColor: labelColor,
+            isRTL: isRTL,
+          ),
           TextFormField(
             textCapitalization: textCapitalization,
             key: key,
@@ -91,6 +97,7 @@ class InputText extends StatelessWidget {
             validator: validator,
             cursorColor: Theme.of(context).primaryColor,
             keyboardType: keyboardType,
+            textInputAction: TextInputAction.done,
           ),
         ],
       ),

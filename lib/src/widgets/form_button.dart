@@ -108,12 +108,15 @@ class _ManyButtonForm extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 PrimaryButton(
-                  onPressed: () {
-                    if (onSubmit != null) onSubmit!();
-                  },
-                  text: submitText,
-                  overflow: TextOverflow.ellipsis,
-                ),
+                    onPressed: () {
+                      if (onSubmit != null) onSubmit!();
+                    },
+                    text: submitText,
+                    overflow: TextOverflow.ellipsis,
+                    textStyle: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.bold,
+                    )),
               ],
             )
           : indexForm == 0

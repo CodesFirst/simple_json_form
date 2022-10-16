@@ -8,7 +8,8 @@ class RawBuilder {
   });
 
   factory RawBuilder.fromJson(Map<String, dynamic> json) => RawBuilder(
-        properties: List<Properties>.from(json['properties'].map((e) => Properties.fromJson(e))),
+        properties: List<Properties>.from(
+            json['properties'].map((e) => Properties.fromJson(e))),
         title: json['title'],
         description: json['description'],
       );
